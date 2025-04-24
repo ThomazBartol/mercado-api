@@ -2,17 +2,14 @@ package br.com.fiap.Mercado.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Character {
+public class MyCharacter {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank(message = "não pode estar em branco")
@@ -32,5 +29,9 @@ public class Character {
         if (coins == null) {
             coins = 0;
         }
+    }
+
+    public String getName(){
+        return name;
     }
 }

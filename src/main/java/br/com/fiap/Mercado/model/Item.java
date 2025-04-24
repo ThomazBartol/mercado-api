@@ -26,5 +26,12 @@ public class Item {
     @Positive(message = "não pode ser negativo ou 0")
     private Integer price;
     @ManyToOne
-    private Character owner;
+    private MyCharacter owner;
+
+    @PrePersist
+    public void prePersist() {
+        if (price == null) {
+            price = 1;
+        }
+    }
 }
