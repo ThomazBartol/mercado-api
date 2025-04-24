@@ -34,4 +34,16 @@ public class MyCharacter {
     public String getName(){
         return name;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public CharacterClass getClasse(){
+        return classe;
+    }
+
+    public void setClasse(CharacterClass classe){
+        this.classe = classe;
+    }
 }

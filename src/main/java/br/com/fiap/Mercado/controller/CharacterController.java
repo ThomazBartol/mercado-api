@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,5 +38,34 @@ public class CharacterController {
     public MyCharacter create(@RequestBody @Valid MyCharacter character) {
         System.out.println("Personagem " + character.getName() + " criado com sucesso");
         return repository.save(character);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Editar Personagem", description = "Atualiza os dados de um personagem")
+    @CacheEvict(value = "characters", allEntries = true)
+    public ResponseEntity<MyCharacter> update(@PathVariable Long id, @RequestBody @Valid MyCharacter updatedCharacter) {
+
+        MyCharacter character = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Personagem não encontrado com o id: " + id));
+
+        character.setName(updatedCharacter.getName());
+        character.setClasse(updatedCharacter.getClasse());
+
+        MyCharacter savedCharacter = repository.save(character);
+
+        return ResponseEntity.ok(savedCharacter);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar Personagem", description = "Remove um personagem do banco de dados")
+    @CacheEvict(value = "characters", allEntries = true)
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        MyCharacter character = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Personagem não encontrado com o id: " + id));
+
+        repository.delete(character);
+
+        return ResponseEntity.noContent().build();
     }
 }
